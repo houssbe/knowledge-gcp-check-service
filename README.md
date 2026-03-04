@@ -169,5 +169,3 @@ If you want to update the "global rules" for how the agent behaves, evaluates ca
 4. Restart the server (`npm run dev` or `npm start`) for the new rules to take effect.
 
 ---
-
-_Created by the Google DeepMind Antigravity Team._
