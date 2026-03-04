@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex AI | CE Assessment</title>
+    <meta name="description"
+        content="A state-of-the-art AI skill assessment platform for Google Cloud Customer Engineers focusing on Vertex AI.">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="particles-background"></div>
+
+    <main class="container">
+        <header class="app-header">
+            <div class="logo-container">
+                <!-- A futuristic glowing icon representing AI -->
+                <svg class="glow-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 17L12 22L22 17" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 12L12 17L22 12" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <h1>Vertex AI <span class="accent-text">Assessment</span></h1>
+            </div>
+            <p class="subtitle">Prove your Generative AI mastery. Self-assess against real-time Developer Knowledge.</p>
+        </header>
+
+        <!-- Generation Phase (Initial View) -->
+        <section id="generate-section" class="glass-card active-section">
+            <div class="card-header">
+                <h2>1. Generate Scenario</h2>
+                <p>Agent will query the latest Google Developer Cloud documentation to create a complex customer
+                    scenario.</p>
+            </div>
+            <div class="input-group">
+                <label for="topic-select">Assessment Topic</label>
+                <select id="topic-select" class="dropdown">
+                    <option value="Generative AI & LLMs">Generative AI & LLMs</option>
+                    <option value="MLOps & Pipelines">MLOps & Pipelines</option>
+                    <option value="Model Training & Customization">Model Training & Customization</option>
+                    <option value="Search & Conversation (Agents)">Search & Conversation (Agents)</option>
+                    <option value="Vector Search & Embeddings">Vector Search & Embeddings</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="industry-input">Customer Industry Scenario (Optional)</label>
+                <input list="industry-options" id="industry-input" placeholder="Select one or type your own...">
+                <datalist id="industry-options">
+                    <option value="Retail & E-commerce">
+                    <option value="Financial Services & Banking">
+                    <option value="Healthcare & Life Sciences">
+                    <option value="Media & Entertainment">
+                    <option value="Manufacturing & Supply Chain">
+                </datalist>
+            </div>
+            <p id="gen-status" class="status-label hidden"></p>
+            <button id="generate-btn" class="primary-btn">
+                <span class="btn-text">Generate Assessment</span>
+                <div class="loader hidden" id="gen-loader"></div>
+            </button>
+        </section>
+
+        <!-- Assessment Phase -->
+        <section id="assessment-section" class="glass-card hidden">
+            <div class="scenario-ribbon">SCENARIO ACTIVE</div>
+
+            <div class="context-box">
+                <h3 class="label-heading">Customer Context</h3>
+                <p id="context-display" class="dynamic-text"></p>
+            </div>
+
+            <div class="question-box">
+                <h3 class="label-heading">Question</h3>
+                <p id="question-display" class="dynamic-text main-question"></p>
+            </div>
+
+            <div class="input-group">
+                <label for="answer-input">Your Technical Response</label>
+                <textarea id="answer-input" rows="6"
+                    placeholder="Formulate your answer here as if you are advising a real Google Cloud customer..."></textarea>
+            </div>
+            <p id="eval-status" class="status-label hidden"></p>
+            <button id="evaluate-btn" class="primary-btn submit-btn">
+                <span class="btn-text">Submit for Evaluation</span>
+                <div class="loader hidden" id="eval-loader"></div>
+            </button>
+        </section>
+
+        <!-- Result Phase -->
+        <section id="result-section" class="glass-card hidden">
+            <h2 id="result-title" class="result-title"></h2>
+
+            <div class="feedback-box">
+                <h3 class="label-heading">Feedback & Rationale</h3>
+                <p id="feedback-display" class="dynamic-text"></p>
+            </div>
+
+            <div class="sources-box">
+                <h3 class="label-heading">Ground Truth Sources</h3>
+                <ul id="sources-display" class="source-list"></ul>
+            </div>
+
+            <div class="expected-box">
+                <h3 class="label-heading">Agent's Expected Answer</h3>
+                <p id="expected-display" class="dynamic-text expected-text"></p>
+            </div>
+
+            <button id="reset-btn" class="secondary-btn">New Assessment</button>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

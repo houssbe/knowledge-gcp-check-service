@@ -1,0 +1,412 @@
+:root {
+    --bg-dark: #09090b;
+    --bg-gradient: linear-gradient(135deg, #09090b 0%, #171728 50%, #1a1a2e 100%);
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --primary-cyan: #00e5ff;
+    --primary-cyan-hover: #00b3cc;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --success: #34d399;
+    --error: #f87171;
+    --font-main: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Subtle background effects */
+#particles-background {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: radial-gradient(circle at center, rgba(0, 229, 255, 0.03) 0%, transparent 40%);
+    animation: rotateSlow 60s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotateSlow {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    z-index: 1;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 0.5rem;
+}
+
+.logo-container h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.accent-text {
+    background: linear-gradient(90deg, #00e5ff, #8a2be2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+}
+
+.glass-card.active-section {
+    display: block;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Typography Inside Cards */
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.label-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary-cyan);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.dynamic-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #e4e4e7;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.question-box,
+.context-box,
+.feedback-box,
+.sources-box,
+.expected-box {
+    margin-bottom: 1.5rem;
+}
+
+.main-question {
+    font-size: 1.2rem;
+    border-left: 3px solid var(--primary-cyan);
+    background: rgba(0, 229, 255, 0.05);
+    font-weight: 500;
+}
+
+.expected-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    border-left-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Inputs & Forms */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.input-group select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.input-group select option {
+    background: #1a1e2d;
+    /* Fallback for select options native UI */
+    color: white;
+}
+
+input[type="text"] {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    resize: vertical;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons */
+button {
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.primary-btn {
+    background: var(--primary-cyan);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
+}
+
+.primary-btn:hover {
+    background: var(--primary-cyan-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 229, 255, 0.3);
+}
+
+.primary-btn:active {
+    transform: translateY(1px);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: #fff;
+    border: 1px solid var(--card-border);
+    margin-top: 1rem;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Loader Spinners */
+.loader {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.status-label {
+    font-size: 0.85rem;
+    color: #00e5ff;
+    opacity: 0.85;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
+}
+
+.btn-loading .loader {
+    display: block !important;
+}
+
+/* Result specific styling */
+.result-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-success {
+    color: var(--success);
+}
+
+.result-fail {
+    color: var(--error);
+}
+
+.source-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.source-list li {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Scenario Ribbon */
+.scenario-ribbon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--primary-cyan);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.3rem 1.5rem;
+    transform: rotate(45deg) translate(20px, -15px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
