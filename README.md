@@ -1,6 +1,6 @@
 # CE Assessment Agent
 
-Evaluate your Google Cloud Customer Engineer (CE) skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate complex challenges and provide grounded, real-time evaluation of your technical proposals.
+Evaluate your Google Cloud Customer Engineer (CE) skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
 
 **Note**: The agent is explicitly configured to decline generating or evaluating questions regarding security or topics outside its designated Google Cloud scopes.
 
@@ -10,17 +10,17 @@ The **CE Assessment Agent** validates your technical mastery of Google Cloud top
 
 ### Key Features
 
-- **Batch Scenario Generation**: Pre-generates complex, multimodal-aware customer scenarios based on chosen Google Cloud topics into a fast local SQLite database.
+- **Batch Scenario Generation**: Pre-generates customer scenarios based on chosen Google Cloud topics into a local SQLite database.
 - **Real-time Evaluation**: Evaluates candidate responses against live documentation using an agentic reasoning loop.
 - **Documentation Grounding**: Explicitly cites source URLs from the Google Developer Knowledge MCP for every assessment.
-- **Modern Tech Stack**: Built with TypeScript, Node.js, Express, SQLite (`better-sqlite3`), and a high-performance Vanilla UI.
+- **Tech Stack**: Built with TypeScript, Node.js, Express, SQLite (`better-sqlite3`), and a Vanilla UI.
 
 ## 🛠️ Architecture
 
 - **AI Engine**: `gemini-3-flash-preview` via the `@google/genai` SDK.
 - **Knowledge Layer**: Integrated with the **Developer Knowledge MCP Server** (`developerknowledge.googleapis.com`).
 - **Backend**: Node.js & TypeScript with strict type-safety.
-- **Frontend**: Premium Glassmorphism UI using Vanilla HTML/CSS/TS (bundled with Rollup).
+- **Frontend**: Glassmorphism UI using Vanilla HTML/CSS/TS (bundled with Rollup).
 - **Testing**: Unit tests provided via Vitest with isolated dependency mocking.
 
 ## 📦 Getting Started
@@ -141,7 +141,7 @@ You can run the assessment in two modes:
 
 #### **Web Interface (Recommended)**
 
-This launches a local server with a premium graphical interface.
+This launches a local server with a graphical interface.
 
 ```bash
 npm start
