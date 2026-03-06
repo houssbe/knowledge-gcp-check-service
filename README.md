@@ -1,6 +1,6 @@
 # Test Your GCP Knowledge
 
-Evaluate your Google Cloud Customer Engineer (CE) skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
+Evaluate your Google Cloud skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
 
 **Note**: The agent is explicitly configured to decline generating or evaluating questions regarding security or topics outside its designated Google Cloud scopes.
 
@@ -17,7 +17,7 @@ The **Test Your GCP Knowledge** application validates your technical mastery of 
 
 ## 🛠️ Architecture
 
-- **AI Engine**: `gemini-3-flash-preview` via the `@google/genai` SDK.
+- **AI Engine**: `gemini-3.1-flash-lite-preview` via the `@google/genai` SDK.
 - **Knowledge Layer**: Integrated with the **Developer Knowledge MCP Server** (`developerknowledge.googleapis.com`).
 - **Backend**: Node.js & TypeScript with strict type-safety.
 - **Frontend**: Glassmorphism UI using Vanilla HTML/CSS/TS (bundled with Rollup).
@@ -175,7 +175,7 @@ node dist/index.js
 
 ## 🧪 Testing
 
-The project includes a comprehensive test suite using Vitest that mocks both the Gemini API and the MCP Server for fast, reliable local validation.
+The project includes a test suite using Vitest that mocks both the Gemini API and the MCP Server for local validation.
 
 ```bash
 npm test
