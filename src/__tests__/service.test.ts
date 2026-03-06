@@ -1,31 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GCPKnowledgeService } from '../service.js';
 
-// vi.hoisted ensures this value is available when vi.mock factories are executed
-// (vi.mock is hoisted above all imports by Vitest, so top-level consts aren't safe to use inside factories)
-const { mockGeneratedJSON } = vi.hoisted(() => {
-    const mockGeneratedJSON = JSON.stringify({
+const mocks = vi.hoisted(() => ({
+    genData: {
         id: 'test_q',
         question: 'mocked question',
         context: 'Mocked context.',
         referenceAnswer: 'Mocked reference answer.',
         reasoning: 'mocked reasoning',
         isCorrect: true,
-        feedback: 'Mocked feedback.'
-    });
-    return { mockGeneratedJSON };
-});
+        feedback: 'Mocked feedback.',
+        citations: [] as string[]
+    }
+}));
 
 vi.mock('@google/genai', () => {
     return {
         GoogleGenAI: class {
             models = {
                 generateContent: vi.fn().mockImplementation(({ config }) => {
-                    // If the schema is an ARRAY type, return array (question generation)
                     const isArray = config?.responseSchema?.type === 'array';
                     const text = isArray
-                        ? JSON.stringify([JSON.parse(mockGeneratedJSON)])
-                        : mockGeneratedJSON;
+                        ? JSON.stringify([mocks.genData])
+                        : JSON.stringify(mocks.genData);
                     return Promise.resolve({ text });
                 })
             };
@@ -88,5 +85,28 @@ describe('GCPKnowledgeService', () => {
         expect(evalResult.isCorrect).toBe(true);
         expect(evalResult.feedback).toBe('Mocked feedback.');
         expect(evalResult.reasoning).toBe('mocked reasoning');
+    });
+
+    it('should filter out irrelevant citations during generation', async () => {
+        const agent = new GCPKnowledgeService();
+        
+        // Mock the LLM returning one valid citation and one irrelevant citation
+        mocks.genData.citations = [
+            'projects/123/locations/global/collections/default/dataStores/my-store/documents/valid', 
+            'projects/123/locations/global/collections/default/dataStores/my-store/documents/irrelevant'
+        ];
+        
+        const result = await agent.generateQuestions('Vertex test', 1, {
+            snippets: 'some snippet',
+            parentNames: ['projects/123/locations/global/collections/default/dataStores/my-store/documents/valid']
+        });
+
+        // The service should filter out the irrelevant citation and only keep the valid one
+        expect(result[0]!.citations).toEqual([
+            'projects/123/locations/global/collections/default/dataStores/my-store/documents/valid'
+        ]);
+        
+        // Reset citations for other tests
+        mocks.genData.citations = [];
     });
 });

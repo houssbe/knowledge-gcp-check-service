@@ -97,7 +97,8 @@ app.post("/api/generate", async (c) => {
         );
     }
 
-    // Topic is parsed for validation but not used for DB filtering.
+    // Topic is parsed and used for DB filtering.
+    const topic = parsed.data.topic;
 
     return streamSSE(c, async (stream) => {
         const emit = (event: object) => stream.writeSSE({ data: JSON.stringify(event) });
@@ -107,7 +108,7 @@ app.post("/api/generate", async (c) => {
 
             await emit({ type: "progress", step: "Fetching pre-generated question..." });
 
-            const question = getRandomQuestion() || getRandomQuestion(); // Random fallback
+            const question = getRandomQuestion(topic) || getRandomQuestion(); // Random fallback
             if (!question) {
                 throw new Error("No questions found in database. Please run npm run seed first.");
             }
