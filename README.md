@@ -1,6 +1,6 @@
 # Test Your GCP Knowledge
 
-Evaluate your Google Cloud skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
+Evaluate your Google Cloud skills against realistic scenarios. This tool uses Gemini and the Developer Knowledge API via the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
 
 **Note**: The agent is explicitly configured to decline generating or evaluating questions regarding security or topics outside its designated Google Cloud scopes.
 
