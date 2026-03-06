@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CEAssessmentAgent } from '../agent.js';
+import { GCPKnowledgeService } from '../service.js';
 
 // vi.hoisted ensures this value is available when vi.mock factories are executed
 // (vi.mock is hoisted above all imports by Vitest, so top-level consts aren't safe to use inside factories)
@@ -16,34 +16,21 @@ const { mockGeneratedJSON } = vi.hoisted(() => {
     return { mockGeneratedJSON };
 });
 
-vi.mock('@google/genai', () => ({
-    Type: { OBJECT: 'object', STRING: 'string', BOOLEAN: 'boolean' }
-}));
-
-vi.mock('@google/adk', () => {
+vi.mock('@google/genai', () => {
     return {
-        Gemini: class { },
-        LlmAgent: class {
-            name = 'assessment_evaluator_agent';
-        },
-        MCPToolset: class {
-            getTools = vi.fn().mockResolvedValue([]);
-            close = vi.fn().mockResolvedValue(undefined);
-        },
-        InMemoryRunner: class {
-            appName = 'InMemoryRunner';
-            sessionService = {
-                createSession: vi.fn().mockResolvedValue({})
+        GoogleGenAI: class {
+            models = {
+                generateContent: vi.fn().mockImplementation(({ config }) => {
+                    // If the schema is an ARRAY type, return array (question generation)
+                    const isArray = config?.responseSchema?.type === 'array';
+                    const text = isArray
+                        ? JSON.stringify([JSON.parse(mockGeneratedJSON)])
+                        : mockGeneratedJSON;
+                    return Promise.resolve({ text });
+                })
             };
-            runAsync = vi.fn().mockImplementation(async function* () {
-                yield {
-                    content: true,
-                    author: 'assessment_evaluator_agent',
-                };
-            });
         },
-        stringifyContent: vi.fn().mockReturnValue(mockGeneratedJSON),
-        FunctionTool: class { }
+        Type: { OBJECT: 'object', STRING: 'string', BOOLEAN: 'boolean', ARRAY: 'array' }
     };
 });
 
@@ -58,7 +45,7 @@ vi.mock('google-auth-library', () => {
     };
 });
 
-describe('CEAssessmentAgent', () => {
+describe('GCPKnowledgeService', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -73,7 +60,7 @@ describe('CEAssessmentAgent', () => {
     });
 
     it('should generate a question successfully', async () => {
-        const agent = new CEAssessmentAgent();
+        const agent = new GCPKnowledgeService();
         const result = await agent.generateQuestion('Vertex test');
 
         expect(result).toBeDefined();
@@ -84,13 +71,14 @@ describe('CEAssessmentAgent', () => {
     });
 
     it('should evaluate an answer successfully', async () => {
-        const agent = new CEAssessmentAgent();
+        const agent = new GCPKnowledgeService();
         const evalResult = await agent.evaluateAnswer(
             {
                 id: 'test_q',
                 question: 'mock question',
                 context: 'mock ctx',
-                referenceAnswer: 'mock ref'
+                referenceAnswer: 'mock ref',
+                citations: []
             },
             'User answer xyz'
         );

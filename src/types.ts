@@ -11,6 +11,7 @@ export const AssessmentQuestionSchema = z.object({
     question: z.string().min(1, "Question text must not be empty."),
     context: z.string().min(1, "Context must not be empty."),
     referenceAnswer: z.string().min(1, "Reference answer must not be empty."),
+    citations: z.array(z.string()).default([]),
 });
 
 export const AssessmentResultSchema = z.object({
@@ -19,6 +20,7 @@ export const AssessmentResultSchema = z.object({
     reasoning: z.string().min(1, "Reasoning must not be empty."),
     feedback: z.string().min(1, "Feedback must not be empty."),
     sourcesUsed: z.array(z.string()),
+    citations: z.array(z.string()).default([]),
 });
 
 // Intermediate schema for the raw evaluation output (before we enrich it with
@@ -27,6 +29,7 @@ export const EvaluationOutputSchema = z.object({
     isCorrect: z.boolean(),
     reasoning: z.string().min(1, "Reasoning must not be empty."),
     feedback: z.string().min(1, "Feedback must not be empty."),
+    citations: z.array(z.string()).default([]),
 });
 
 // TypeScript types inferred directly from the schemas — no need to maintain

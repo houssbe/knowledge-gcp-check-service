@@ -1,39 +1,73 @@
-import { CEAssessmentAgent } from '../src/agent.js';
+import { GCPKnowledgeService } from '../src/service.js';
 import { db, insertQuestion } from '../src/db.js';
 import { getConfig } from '../src/config.js';
 
-const PRODUCT_CATEGORIES = [
-    "Cloud AI",
-    "Data Cloud (e.g., BigQuery, Cloud SQL, AlloyDB, Spanner)",
-    "Modern Infrastructure (e.g., GKE, Cloud Run)",
+/**
+ * A list of Google Cloud products that double as UI topics.
+ * These are passed directly to the MCP search.
+ */
+const PRODUCTS: string[] = [
+    "Vertex AI",
+    "BigQuery",
+    "AlloyDB",
+    "Cloud SQL",
+    "Spanner",
+    "GKE",
+    "Cloud Run"
 ];
 
 const config = getConfig();
-const QUESTIONS_PER_PLAY = config.questionsPerPlay ?? 2;
+const QUESTIONS_PER_PRODUCT = config.questionsPerPlay ?? 2;
 
 async function seed() {
     console.log("=== Starting Batch Question Generation ===");
-    console.log(`Targeting ${PRODUCT_CATEGORIES.length} Google Cloud Categories, ${QUESTIONS_PER_PLAY} questions each.`);
+    console.log(`${PRODUCTS.length} products, ${QUESTIONS_PER_PRODUCT} question(s) each.\n`);
 
-    const agent = new CEAssessmentAgent();
+    const agent = new GCPKnowledgeService();
 
-    for (const play of PRODUCT_CATEGORIES) {
-        console.log(`\n\n--- Generating for Category: ${play} ---`);
-        for (let i = 1; i <= QUESTIONS_PER_PLAY; i++) {
-            console.log(`\n[${i}/${QUESTIONS_PER_PLAY}] Generating question...`);
-            try {
-                const question = await agent.generateQuestion(play, async (step) => {
-                    console.log(`  -> Agent: ${step}`);
-                });
+    // ── Phase 1: Parallel MCP Pre-fetch ───────────────────────────────
+    console.log("── Phase 1: Parallel MCP pre-fetch ──");
+    const snippetMap = new Map<string, { snippets: string; parentNames: string[] }>();
 
-                insertQuestion(question, play);
-                console.log(`  ✅ Successfully saved question: ${question.id}`);
-                console.log(`     Topic: ${play}`);
-                console.log(`     Question length: ${question.question.length} chars`);
-            } catch (error) {
-                console.error(`  ❌ Failed to generate question for play "${play}":`);
-                console.error(error);
+    const fetchResults = await Promise.allSettled(
+        PRODUCTS.map(async (product) => {
+            if (snippetMap.has(product)) return; // dedup
+            const result = await agent.searchSnippets(product);
+            snippetMap.set(product, result);
+        })
+    );
+
+    const fetchOk = fetchResults.filter(r => r.status === "fulfilled").length;
+    const fetchFail = fetchResults.filter(r => r.status === "rejected").length;
+    console.log(`\n✅ Pre-fetch complete: ${fetchOk} succeeded, ${fetchFail} failed\n`);
+
+    // ── Phase 2: Batch Question Generation (per product) ──────────────
+    console.log("── Phase 2: Batch question generation ──");
+
+    for (const product of PRODUCTS) {
+        console.log(`\n--- Product: ${product} (${QUESTIONS_PER_PRODUCT} question(s)) ---`);
+        try {
+            const prefetched = snippetMap.get(product);
+            const questions = await agent.generateQuestions(
+                product,
+                QUESTIONS_PER_PRODUCT,
+                prefetched,
+                async (step) => console.log(`    -> ${step}`)
+            );
+
+            let inserted = 0;
+            for (const q of questions) {
+                // Skip refused questions
+                if (q.question.includes("I cannot generate") || q.question.includes("does not mention")) {
+                    console.log(`    [!] Skipping refused question for ${product}`);
+                    continue;
+                }
+                insertQuestion(q, product);
+                inserted++;
             }
+            console.log(`    ✅ Inserted ${inserted} question(s) into database.`);
+        } catch (err) {
+            console.error(`    ❌ Failed generating batch for ${product}:`, err);
         }
     }
 

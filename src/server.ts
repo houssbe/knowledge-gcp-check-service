@@ -6,7 +6,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { randomUUID } from "crypto";
 import { z } from "zod";
 import { AssessmentQuestionSchema } from "./types.js";
-import { CEAssessmentAgent } from "./agent.js";
+import { GCPKnowledgeService } from "./service.js";
 import { getRandomQuestion } from "./db.js";
 
 const PORT = Number(process.env["PORT"] ?? 3000);
@@ -42,14 +42,14 @@ const EvaluateRequestSchema = z.object({
 const SESSION_TTL_MS = 30 * 60 * 1000;
 
 interface Session {
-    agent: CEAssessmentAgent;
+    agent: GCPKnowledgeService;
     lastUsed: number;
 }
 
 const sessions = new Map<string, Session>();
 
 /** Returns the agent for a session, refreshing its TTL, or null if not found. */
-function getSession(sessionId: string): CEAssessmentAgent | null {
+function getSession(sessionId: string): GCPKnowledgeService | null {
     const session = sessions.get(sessionId);
     if (!session) return null;
     session.lastUsed = Date.now();
@@ -113,7 +113,7 @@ app.post("/api/generate", async (c) => {
             }
 
             // Question fetched successfully — now register the session for evaluation
-            const tempAgent = new CEAssessmentAgent();
+            const tempAgent = new GCPKnowledgeService();
             const sessionId = randomUUID();
             sessions.set(sessionId, { agent: tempAgent, lastUsed: Date.now() });
             console.log(`[Session] Created: ${sessionId} (active sessions: ${sessions.size})`);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { CEAssessmentAgent } from "./agent.js";
+import { GCPKnowledgeService } from "./service.js";
 import { getRandomQuestion } from "./db.js";
 import * as readline from "readline";
 
@@ -13,10 +13,10 @@ const askQuestion = (query: string): Promise<string> => {
 };
 
 async function run() {
-    console.log("=== CE Interactive Skills Assessment ===");
+    console.log("=== Test Your GCP Knowledge ===\n");
     console.log("Connecting to Developer Knowledge Agent...");
 
-    const agent = new CEAssessmentAgent();
+    const agent = new GCPKnowledgeService();
 
     try {
         console.log("\n[System]: Fetching a pre-generated scenario question...");

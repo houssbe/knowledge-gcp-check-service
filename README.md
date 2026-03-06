@@ -1,4 +1,4 @@
-# CE Assessment Agent
+# Test Your GCP Knowledge
 
 Evaluate your Google Cloud Customer Engineer (CE) skills against realistic customer scenarios. This tool uses Gemini and the Model Context Protocol (MCP) to generate challenges and provide grounded, real-time evaluation of your technical proposals.
 
@@ -6,7 +6,7 @@ Evaluate your Google Cloud Customer Engineer (CE) skills against realistic custo
 
 ## 🚀 Overview
 
-The **CE Assessment Agent** validates your technical mastery of Google Cloud topics such as Cloud AI, Data Cloud, and Modern Infrastructure. Unlike static quiz tools, it uses an **Agentic AI pattern** to browse official documentation in real-time, ensuring every assessment is grounded in the "Ground Truth."
+The **Test Your GCP Knowledge** application validates your technical mastery of Google Cloud topics such as AI, Data, and Modern Infrastructure. Unlike static quiz tools, it uses an **Agentic AI pattern** to browse official documentation in real-time, ensuring every assessment is grounded in the "Ground Truth."
 
 ### Key Features
 
@@ -59,7 +59,7 @@ The agent will automatically use these credentials to acquire OAuth2 tokens for 
 
    ```bash
    git clone <repository-url>
-   cd ce-assessment-agent
+   cd test-your-gcp-knowledge
    ```
 
 2. Install dependencies for the backend and frontend:
@@ -188,7 +188,7 @@ This project follows the **Typescript Best Practices** workflow:
 - **No `any`**: All data structures are strictly typed via interfaces.
 - **Centralized Config**: Environment variables are managed in `src/config.ts`.
 - **Separation of Concerns**: AI prompts are isolated in `src/prompts.ts`.
-- **DI Pattern**: The `CEAssessmentAgent` accepts configuration objects to facilitate testing.
+- **DI Pattern**: The `GCPKnowledgeService` accepts configuration objects to facilitate testing.
 
 ### Updating Global Rules & AI Prompts
 

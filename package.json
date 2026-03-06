@@ -1,10 +1,10 @@
 {
-  "name": "ce-assessment-agent",
+  "name": "test-your-gcp-knowledge",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "ce-assessment-agent": "./dist/index.js"
+    "test-your-gcp-knowledge": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc && cd public && npm run build",
@@ -13,7 +13,7 @@
     "start": "node dist/server.js",
     "cli": "tsx src/index.ts",
     "seed": "tsx scripts/seed.ts",
-    "db:list": "sqlite3 questions.db \"SELECT id, question FROM questions;\"",
+    "db:list": "sqlite3 questions.db \"SELECT id, question, citations FROM questions;\"",
     "db:clean": "sqlite3 questions.db \"DELETE FROM questions WHERE id LIKE 'failure%' OR id LIKE 'error%';\""
   },
   "keywords": [],
