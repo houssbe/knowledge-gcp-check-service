@@ -114,6 +114,19 @@ const authMiddleware = async (c: any, next: () => Promise<void>) => {
 // Health check
 app.get("/health", (c) => c.json({ status: "ok" }));
 
+// GET /api/config — fetch public Firebase configuration for frontend at runtime
+app.get("/api/config", (c) => {
+    return c.json({
+        success: true,
+        config: {
+            apiKey: process.env["FIREBASE_API_KEY"],
+            authDomain: process.env["FIREBASE_AUTH_DOMAIN"] || `${process.env["GCP_PROJECT_ID"]}.firebaseapp.com`,
+            projectId: process.env["GCP_PROJECT_ID"]
+        }
+    });
+});
+
+
 // GET /api/user — fetch the currently authenticated user's profile/username
 app.get("/api/user", authMiddleware, async (c) => {
     const uid = c.get("uid");

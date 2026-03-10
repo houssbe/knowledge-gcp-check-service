@@ -1,16 +1,32 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onIdTokenChanged, signOut } from "firebase/auth";
 
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.GCP_PROJECT_ID
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+let auth: any;
+let googleProvider: any;
 let currentIdToken: string | null = null;
+
+// Async Initializer
+async function initializeFirebase() {
+    try {
+        const res = await fetch("/api/config");
+        const data = await res.json();
+
+        if (!data.success || !data.config.apiKey) {
+            throw new Error("API Key missing from backend response.");
+        }
+
+        const app = initializeApp(data.config);
+        auth = getAuth(app);
+        googleProvider = new GoogleAuthProvider();
+
+        console.log("🔥 Firebase initialized successfully from runtime config.");
+        setupAuthListener(); // Move the listener setup here
+    } catch (e) {
+        console.error("❌ Failed to initialize Firebase:", e);
+        alert("Authentication setup failed. Please try reloading the page.");
+    }
+}
+
 
 // Local interfaces for payload typing
 export interface AssessmentQuestion {
@@ -329,29 +345,35 @@ async function checkUserProfile() {
     }
 }
 
-onIdTokenChanged(auth, async (user) => {
-    if (user) {
-        currentIdToken = await user.getIdToken();
+function setupAuthListener() {
+    onIdTokenChanged(auth, async (user) => {
+        if (user) {
+            currentIdToken = await user.getIdToken();
 
-        // Show app shell, hide landing
-        landingSection.classList.add('hidden');
-        appShell.classList.remove('hidden');
+            // Show app shell, hide landing
+            landingSection.classList.add('hidden');
+            appShell.classList.remove('hidden');
 
-        await checkUserProfile();
-    } else {
-        currentIdToken = null;
+            await checkUserProfile();
+        } else {
+            currentIdToken = null;
 
-        // Show landing, hide app shell
-        landingSection.classList.remove('hidden');
-        appShell.classList.add('hidden');
+            // Show landing, hide app shell
+            landingSection.classList.remove('hidden');
+            appShell.classList.add('hidden');
 
-        authStatus.textContent = '';
-        logoutBtn.classList.add('hidden');
-        editUsernameBtn.classList.add('hidden');
-        usernameSetupGroup.classList.add('hidden');
-        generateBtn.disabled = true;
-    }
-});
+            authStatus.textContent = '';
+            logoutBtn.classList.add('hidden');
+            editUsernameBtn.classList.add('hidden');
+            usernameSetupGroup.classList.add('hidden');
+            generateBtn.disabled = true;
+        }
+    });
+}
+
+// Start Initialization
+initializeFirebase();
+
 
 editUsernameBtn.addEventListener('click', () => {
     usernameInput.value = currentUsername;
